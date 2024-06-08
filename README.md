@@ -48,3 +48,8 @@ _🀄️ 麻将猜手牌小游戏（适用于Onebot V11）🀄️_
 |:-----:|:----:|:----:|:----:|
 | 猜手牌 | 所有人 | 否 | 无 |
 ### 效果图
+<div align="left">
+  
+  <img src="https://raw.githubusercontent.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess/main/img/img.jpg" width="600"/>
+
+</div>
