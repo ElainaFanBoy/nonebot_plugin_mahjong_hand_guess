@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "nonebot-plugin-majhong-hand-guess"
+version = "0.1.0"
+description = "日麻猜手牌小游戏（适用于Onebot V11）"
+authors = ["Nanako <demo0929@vip.qq.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
+repository = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+nonebot2 = "^2.0.0"
+nonebot-adapter-onebot = "^2.2.0"
+ujson = "^5.7.0"
+mahjong = "^1.2.1"
+sqlitedict = "^2.1.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

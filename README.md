@@ -8,7 +8,7 @@
 
 # nonebot-plugin-majhong-hand-guess
 
-_🀄️ 麻将猜手牌小游戏（适用于Onebot V11）🀄️_
+_🀄️ 日麻猜手牌小游戏（适用于 Onebot V11）🀄️_
 
 <img src="https://img.shields.io/github/license/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess.svg" alt="license">
 <img src="https://img.shields.io/badge/nonebot-2.0.0+-red.svg" alt="NoneBot">
@@ -18,22 +18,22 @@ _🀄️ 麻将猜手牌小游戏（适用于Onebot V11）🀄️_
 
 ## 📖 介绍
 
-麻将猜手牌小游戏
+日麻猜手牌小游戏
 
 ## 💿 安装
 
 <details>
 <summary>使用PIP安装</summary>
 
-
     pip install nonebot-plugin-mahjong-hand-guess
+
 </details>
 
 <details>
 <summary>克隆至本地安装</summary>
 
-
     git clone https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess.git
+
 </details>
 
 ## ⚙️ 配置
@@ -41,15 +41,19 @@ _🀄️ 麻将猜手牌小游戏（适用于Onebot V11）🀄️_
 在 nonebot2 项目的`.env`文件中添加下表中的必填配置
 
 | 配置项 | 必填 | 默认值 | 说明 |
-|:-----:|:----:|:----:|:----:|
-| 无 | 否 | 无 | 无 |
+| :----: | :--: | :----: | :--: |
+|   无   |  否  |   无   |  无  |
 
 ## 🎉 使用
+
 ### 指令表
-| 指令 | 权限 | 需要@ | 说明 |
-|:-----:|:----:|:----:|:----:|
-| 猜手牌 | 所有人 | 否 | 无 |
+
+|  指令  |  权限  | 需要@ | 说明 |
+| :----: | :----: | :---: | :--: |
+| 猜手牌 | 所有人 |  否   |  无  |
+
 ### 效果图
+
 <div align="left">
   
   <img src="https://raw.githubusercontent.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess/main/img/img.jpg" width="600"/>
