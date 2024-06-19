@@ -28,7 +28,8 @@ __plugin_meta__ = PluginMetadata(
 
 sv = (
     Command("麻将猜手牌", "日麻猜手牌小游戏")
-    .alias("猜手牌")
+    .config(fuzzy_match=False)
+    .shortcut("猜手牌", {"fuzzy": False, "prefix": True})
     .usage("根据提示猜出手牌")
     .build(use_cmd_start=True, auto_send_output=True, block=True, priority=16)
 )
@@ -45,14 +46,17 @@ async def main(event: Event, target: MsgTarget):
     if hg.already_start():
         await sv.finish("游戏已经开始了, 请不要重复开始")
     hg.start()
-    await sv.send(f"开始一轮猜手牌, 每个人有{hg.MAX_GUESS}次机会")
+    await sv.send(f"开始一轮猜手牌, 每个人有{hg.MAX_GUESS}次机会\n输入 “取消” 结束游戏")
 
     rule_path = __dir.joinpath("assets", "rule.png")
     await sv.send(UniMessage.image(path=rule_path))
 
     @waiter(waits=["message"], block=False)
     async def listen(msg: UniMsg):
-        res = await hg.guesses_handler(msg.extract_plain_text())
+        text = msg.extract_plain_text()
+        if text == "取消":
+            return False
+        res = await hg.guesses_handler(text)
         if not res:
             return
         if res["img"]:
@@ -63,8 +67,11 @@ async def main(event: Event, target: MsgTarget):
             return True
 
     resp = await listen.wait(timeout=hg.TIMEOUT)
-    if resp is None:
-        await sv.send("游戏已超时, 请重新开始")
+    if not resp:
+        if resp is None:
+            await sv.send("游戏已超时, 请重新开始")
+        else:
+            await sv.send("游戏已取消")
         res = await hg.timeout()
         if res and res["img"]:
             await UniMessage.image(raw=image_save(res["img"])).send(at_sender=True)

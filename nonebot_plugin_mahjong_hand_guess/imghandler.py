@@ -1,10 +1,13 @@
 import math
 from io import BytesIO
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
-from PIL.Image import _Box
+
 from PIL import Image, ImageDraw, ImageFont
+
+if TYPE_CHECKING:
+    from PIL.Image import _Box
 
 __dir = Path(__file__).parent
 
@@ -49,7 +52,7 @@ def draw_text_by_line(img, pos, text, font, fill, max_length, center=False, line
         draw.text((x, y), row, font=font, fill=fill)
 
 
-def cut_sprites(img: Image.Image, parameter, box: Optional[_Box] = None, width_padding=0, sprite_call=None) -> list:
+def cut_sprites(img: Image.Image, parameter, box: Optional["_Box"] = None, width_padding=0, sprite_call=None) -> list:
     """
     sprites匀切分割
 

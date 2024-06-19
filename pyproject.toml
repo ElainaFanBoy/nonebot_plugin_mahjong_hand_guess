@@ -15,7 +15,7 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 nonebot2 = "^2.0.0"
-nonebot-plugin-alconna = "^0.47.0"
+nonebot-plugin-alconna = "^0.47.1"
 nonebot-plugin-localstore = "^0.6.0"
 Pillow = "^9.5.0"
 ujson = "^5.7.0"
@@ -28,6 +28,7 @@ nonebot-adapter-onebot = "^2.2.0"
 isort = "^5.13.2"
 black = "^24.4.2"
 ruff = "^0.4.9"
+nonebot2 = { version = "^2.3.1", extras = ["fastapi", "uvicorn"] }
 
 [tool.black]
 line-length = 120
@@ -70,6 +71,7 @@ dev = [
     "isort>=5.13.2",
     "black>=24.4.2",
     "ruff>=0.4.9",
+    "nonebot2[fastapi,uvicorn]>=2.3.1",
 ]
 
 [tool.pdm.build]
@@ -103,3 +105,13 @@ license = {text = "MIT"}
 [project.urls]
 homepage = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
 repository = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
+
+
+[tool.nonebot]
+adapters = [
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
+]
+plugins = [
+    "nonebot_plugin_mahjong_hand_guess"
+]
+builtin_plugins = []
