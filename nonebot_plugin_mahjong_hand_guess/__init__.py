@@ -1,6 +1,3 @@
-from nonebot_plugin_session import EventSession, SessionIdType
-from nonebot_plugin_alconna import UniMsg, Command, UniMessage, MsgTarget
-from nonebot_plugin_waiter import waiter
 from pathlib import Path
 
 from nonebot.adapters import Event
