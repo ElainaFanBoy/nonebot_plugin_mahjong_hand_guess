@@ -1,3 +1,6 @@
+from nonebot_plugin_session import EventSession, SessionIdType
+from nonebot_plugin_alconna import UniMsg, Command, UniMessage, MsgTarget
+from nonebot_plugin_waiter import waiter
 from pathlib import Path
 
 from nonebot.adapters import Event
@@ -10,17 +13,15 @@ require("nonebot_plugin_session")
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_waiter")
 
-from nonebot_plugin_waiter import waiter
-from nonebot_plugin_alconna import UniMsg, Command, UniMessage, MsgTarget
-from nonebot_plugin_session import EventSession, SessionIdType
 
 __plugin_meta__ = PluginMetadata(
     name="日麻猜手牌小游戏",
     description="日麻猜手牌小游戏",
     usage="根据提示猜出手牌",
     type="application",
-    homepage="https://github.com/ElainaFanBoy/nonebot_plugin_majhong_hand_guess",
-    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna", "nonebot_plugin_session"),
+    homepage="https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess",
+    supported_adapters=inherit_supported_adapters(
+        "nonebot_plugin_alconna", "nonebot_plugin_session"),
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
