@@ -6,7 +6,7 @@
 
 <div align="center">
 
-# nonebot-plugin-majhong-hand-guess
+# nonebot-plugin-mahjong-hand-guess
 
 _🀄️ 日麻猜手牌小游戏（适用于 Onebot V11）🀄️_
 
