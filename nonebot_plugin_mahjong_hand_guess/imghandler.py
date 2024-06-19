@@ -1,18 +1,19 @@
 import math
-from typing import List, Tuple
+from io import BytesIO
+from pathlib import Path
+from typing import Optional
+
+from PIL.Image import _Box
 from PIL import Image, ImageDraw, ImageFont
-from .utils import get_path
+
+__dir = Path(__file__).parent
 
 
 def get_font(size, w="85"):
-    return ImageFont.truetype(
-        get_path("assets", "font", f"HYWenHei {w}W.ttf"), size=size
-    )
+    return ImageFont.truetype(__dir.joinpath("assets", "font", f"HYWenHei {w}W.ttf").as_posix(), size=size)
 
 
-def draw_text_by_line(
-    img, pos, text, font, fill, max_length, center=False, line_space=None
-):
+def draw_text_by_line(img, pos, text, font, fill, max_length, center=False, line_space=None):
     """
     在图片上写长段文字, 自动换行
     max_length单行最大长度, 单位像素
@@ -48,9 +49,7 @@ def draw_text_by_line(
         draw.text((x, y), row, font=font, fill=fill)
 
 
-def cut_sprites(
-    img: Image.Image, parameter, box: Tuple = None, width_padding=0, sprite_call=None
-) -> List:
+def cut_sprites(img: Image.Image, parameter, box: Optional[_Box] = None, width_padding=0, sprite_call=None) -> list:
     """
     sprites匀切分割
 
@@ -88,10 +87,10 @@ def cut_sprites(
     for i in range(0, max_num):
         box = (x1, y1, x2, y2)
         section = img.crop(box)
-        
+
         if sprite_call:
             section = sprite_call(section)
-        
+
         sprite_list.append(section)
         x1 += width + width_padding
         x2 += width + width_padding
@@ -103,9 +102,7 @@ def cut_sprites(
     return sprite_list
 
 
-def easy_alpha_composite(
-    im: Image, im_paste: Image, pos=(0, 0), direction="lt"
-) -> Image:
+def easy_alpha_composite(im: Image.Image, im_paste: Image.Image, pos=(0, 0), direction="lt") -> Image.Image:
     """
     透明图像快速粘贴
     """
@@ -115,7 +112,7 @@ def easy_alpha_composite(
     return base
 
 
-def easy_paste(im: Image, im_paste: Image, pos=(0, 0), direction="lt"):
+def easy_paste(im: Image.Image, im_paste: Image.Image, pos=(0, 0), direction="lt"):
     """
     inplace method
     快速粘贴, 自动获取被粘贴图像的坐标。
@@ -131,3 +128,10 @@ def easy_paste(im: Image, im_paste: Image, pos=(0, 0), direction="lt"):
         x = x - int(0.5 * size_x)
         y = y - int(0.5 * size_y)
     im.paste(im_paste, (x, y, x + size_x, y + size_y), im_paste)
+
+
+def image_save(im: Image.Image):
+    bio = BytesIO()
+    im = im.convert("RGB")
+    im.save(bio, format="JPEG", quality=75)
+    return bio
