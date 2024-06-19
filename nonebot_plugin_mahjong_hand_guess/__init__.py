@@ -1,17 +1,24 @@
-from nonebot.adapters.onebot.v11 import Bot, Message, MessageEvent, MessageSegment
-from nonebot import on_command, on_message
-from nonebot.plugin import PluginMetadata
-from .handler import HandGuess
-from .utils import get_path
+from pathlib import Path
 
+from nonebot.adapters import Event
+from nonebot.plugin import PluginMetadata, require, inherit_supported_adapters
+
+from .handler import HandGuess
+from .imghandler import image_save
+
+require("nonebot_plugin_alconna")
+require("nonebot_plugin_waiter")
+
+from nonebot_plugin_waiter import waiter
+from nonebot_plugin_alconna import UniMsg, Command, MsgTarget, UniMessage
 
 __plugin_meta__ = PluginMetadata(
     name="日麻猜手牌小游戏",
-    description="日麻猜手牌小游戏（适用于 Onebot V11）",
-    usage='根据提示猜出手牌',
-    type='application',
-    homepage='https://github.com/ElainaFanBoy/nonebot_plugin_majhong_hand_guess',
-    supported_adapters={"~onebot.v11"},
+    description="日麻猜手牌小游戏",
+    usage="根据提示猜出手牌",
+    type="application",
+    homepage="https://github.com/ElainaFanBoy/nonebot_plugin_majhong_hand_guess",
+    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
@@ -19,38 +26,55 @@ __plugin_meta__ = PluginMetadata(
     },
 )
 
-sv = on_command("麻将猜手牌", aliases={"猜手牌"}, priority=16, block=True)
+sv = (
+    Command("麻将猜手牌", "日麻猜手牌小游戏")
+    .config(fuzzy_match=False)
+    .shortcut("猜手牌", {"fuzzy": False, "prefix": True})
+    .usage("根据提示猜出手牌")
+    .build(use_cmd_start=True, auto_send_output=True, block=True, priority=16)
+)
+
+__dir = Path(__file__).parent
 
 
 @sv.handle()
-async def main(bot: Bot, event: MessageEvent):
-    user_id = event.user_id
-    group_id = event.group_id
+async def main(event: Event, target: MsgTarget):
+    if target.private:
+        await sv.finish("请在群聊中使用")
 
-    hg = HandGuess(user_id, group_id)
-    res = await hg.start()
-    if res["error"]:
-        await sv.finish(res["msg"])
-    await sv.send(f"开始一轮猜手牌, 每个人有{hg.MAX_GUESS}次机会")
+    hg = HandGuess(event.get_user_id(), target.id)
+    if hg.already_start():
+        await sv.finish("游戏已经开始了, 请不要重复开始")
+    hg.start()
+    await sv.send(f"开始一轮猜手牌, 每个人有{hg.MAX_GUESS}次机会\n输入 “取消” 结束游戏")
 
-    rule_path = get_path("assets", "rule.png")
-    await sv.send(MessageSegment.image(f"file:///{rule_path}"))
+    rule_path = __dir.joinpath("assets", "rule.png")
+    await sv.send(UniMessage.image(path=rule_path))
 
-group_message = on_message(priority=17, block=False)
+    @waiter(waits=["message"], block=False)
+    async def listen(msg: UniMsg):
+        text = msg.extract_plain_text()
+        if text == "取消":
+            return False
+        res = await hg.guesses_handler(text)
+        if not res:
+            return
+        if res["img"]:
+            await UniMessage.image(raw=image_save(res["img"])).send(at_sender=True)
+        if res["msg"]:
+            await UniMessage.text(res["msg"]).send(at_sender=True)
+        if res["finish"]:
+            return True
 
-
-@group_message.handle()
-async def on_input_chara_name(bot: Bot, event: MessageEvent):
-    msg = event.raw_message
-    user_id = event.user_id
-    group_id = event.group_id
-
-    hg = HandGuess(user_id, group_id)
-
-    if hg.is_start():
-        res = await hg.guesses_handler(msg)
-        if res.get("img"):
-            await group_message.send(MessageSegment.image(res["img"]), at_sender=True)
-
-        if res.get("msg"):
-            await group_message.send(res["msg"], at_sender=True)
+    resp = await listen.wait(timeout=hg.TIMEOUT)
+    if not resp:
+        if resp is None:
+            await sv.send("游戏已超时, 请重新开始")
+        else:
+            await sv.send("游戏已取消")
+        res = await hg.timeout()
+        if res and res["img"]:
+            await UniMessage.image(raw=image_save(res["img"])).send(at_sender=True)
+        if res and res["msg"]:
+            await UniMessage.text(res["msg"]).send(at_sender=True)
+    await sv.finish()

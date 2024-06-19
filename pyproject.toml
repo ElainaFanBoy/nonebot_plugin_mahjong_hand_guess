@@ -15,8 +15,8 @@ packages = [
 [tool.poetry.dependencies]
 python = "^3.9"
 nonebot2 = "^2.0.0"
-nonebot-adapter-onebot = "^2.2.0"
-nonebot-plugin-apscheduler = "^0.3.0"
+nonebot-plugin-alconna = "^0.47.1"
+nonebot-plugin-localstore = "^0.6.0"
 Pillow = "^9.5.0"
 ujson = "^5.7.0"
 mahjong = "^1.2.1"
@@ -24,7 +24,94 @@ sqlitedict = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+nonebot-adapter-onebot = "^2.2.0"
+isort = "^5.13.2"
+black = "^24.4.2"
+ruff = "^0.4.9"
+nonebot2 = { version = "^2.3.1", extras = ["fastapi", "uvicorn"] }
 
+[tool.black]
+line-length = 120
+target-version = ["py39", "py310", "py311", "py312"]
+include = '\.pyi?$'
+extend-exclude = '''
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 120
+length_sort = true
+skip_gitignore = true
+force_sort_within_sections = true
+extra_standard_library = ["typing_extensions"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "UP", "C", "T", "PYI", "PT", "Q"]
+ignore = ["C901", "T201", "E731", "E402"]
+
+[tool.pyright]
+pythonVersion = "3.9"
+pythonPlatform = "All"
+defineConstant = { PYDANTIC_V2 = true }
+typeCheckingMode = "basic"
+reportShadowedImports = false
+disableBytesTypePromotions = true
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest<6.0,>=5.2",
+    "nonebot-adapter-onebot<3.0.0,>=2.2.0",
+    "isort>=5.13.2",
+    "black>=24.4.2",
+    "ruff>=0.4.9",
+    "nonebot2[fastapi,uvicorn]>=2.3.1",
+]
+
+[tool.pdm.build]
+includes = ["nonebot_plugin_mahjong_hand_guess"]
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[project]
+name = "nonebot-plugin-majhong-hand-guess"
+version = "0.1.1"
+description = "日麻猜手牌小游戏（适用于Onebot V11）"
+authors = [
+    {name = "rf_tar_railt", email = "3165388245@qq.com"},
+    {name = "Nanako", email = "demo0929@vip.qq.com"},
+]
+dependencies = [
+    "nonebot2<3.0.0,>=2.0.0",
+    "Pillow<10.0.0,>=9.5.0",
+    "ujson<6.0.0,>=5.7.0",
+    "mahjong<2.0.0,>=1.2.1",
+    "sqlitedict<3.0.0,>=2.1.0",
+    "nonebot-plugin-alconna>=0.47.0",
+    "nonebot-plugin-localstore>=0.6.0",
+]
+requires-python = "<4.0,>=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.urls]
+homepage = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
+repository = "https://github.com/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess"
+
+
+[tool.nonebot]
+adapters = [
+    { name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11" }
+]
+plugins = [
+    "nonebot_plugin_mahjong_hand_guess"
+]
+builtin_plugins = []

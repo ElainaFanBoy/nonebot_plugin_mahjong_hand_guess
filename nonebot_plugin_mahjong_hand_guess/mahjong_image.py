@@ -1,10 +1,9 @@
-from collections import defaultdict
 from enum import Enum
+from pathlib import Path
 
 from PIL import Image
 
 from .imghandler import cut_sprites
-from .utils import get_path
 
 __all__ = ["MahjongImage", "TilebackType"]
 
@@ -58,10 +57,11 @@ class TilebackType(Enum):
     no_color = "no.png"
 
 
-MahjongImageObj = defaultdict(dict)
+MahjongImageObj: dict[TilebackType, dict[str, Image.Image]] = {}
+__dir = Path(__file__).parent
 
 for filename in TilebackType:
-    img = Image.open(get_path("assets", filename.value))
+    img = Image.open(__dir.joinpath("assets", filename.value))
     MahjongImageObj[filename] = dict(
         zip(
             TilebackMap,
@@ -84,6 +84,6 @@ class MahjongImage:
 
     def tile(self, name):
         if name not in TilebackMap:
-            return TilebackMap[self.type]["back"]
+            return MahjongImageObj[self.type]["back"]
         else:
             return MahjongImageObj[self.type][name]

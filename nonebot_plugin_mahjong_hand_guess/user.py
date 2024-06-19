@@ -1,9 +1,12 @@
-from collections import namedtuple
-from .utils import init_db
+from typing import NamedTuple
+
+from .db import init_db
 
 UserDb = init_db(tablename="user_db")
 
-UserInfo = namedtuple("UserInfo", "points", defaults=(0,))
+
+class UserInfo(NamedTuple):
+    points: int
 
 
 class User:
@@ -14,7 +17,7 @@ class User:
 
     def get_info(self):
         info = UserDb.get(self.user_id)
-        return UserInfo(**info) if info else UserInfo()
+        return UserInfo(**info) if info else UserInfo(0)
 
     @property
     def points(self):
