@@ -1,3 +1,5 @@
+from nonebot_plugin_alconna import UniMsg, Command, MsgTarget, UniMessage
+from nonebot_plugin_waiter import waiter
 from pathlib import Path
 
 from nonebot.adapters import Event
@@ -9,8 +11,6 @@ from .imghandler import image_save
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_waiter")
 
-from nonebot_plugin_waiter import waiter
-from nonebot_plugin_alconna import UniMsg, Command, MsgTarget, UniMessage
 
 __plugin_meta__ = PluginMetadata(
     name="日麻猜手牌小游戏",
@@ -22,7 +22,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
-        "version": "0.1.1",
+        "version": "0.2.0",
     },
 )
 

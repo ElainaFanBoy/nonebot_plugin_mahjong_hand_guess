@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-majhong-hand-guess"
-version = "0.1.1"
+version = "0.2.0"
 description = "日麻猜手牌小游戏（适用于Onebot V11）"
 authors = ["Nanako <demo0929@vip.qq.com>"]
 license = "MIT"
@@ -83,7 +83,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "nonebot-plugin-majhong-hand-guess"
-version = "0.1.1"
+version = "0.2.0"
 description = "日麻猜手牌小游戏（适用于Onebot V11）"
 authors = [
     {name = "rf_tar_railt", email = "3165388245@qq.com"},
