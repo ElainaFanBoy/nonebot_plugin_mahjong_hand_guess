@@ -10,6 +10,9 @@ require("nonebot_plugin_session")
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_waiter")
 
+from nonebot_plugin_session import EventSession, SessionIdType
+from nonebot_plugin_alconna import UniMsg, Command, UniMessage, MsgTarget
+from nonebot_plugin_waiter import waiter
 
 __plugin_meta__ = PluginMetadata(
     name="日麻猜手牌小游戏",
