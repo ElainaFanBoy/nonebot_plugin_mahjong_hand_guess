@@ -184,13 +184,13 @@ class HandGuess:
     def win_game(self, points: int):
         self.reset_game()
         self.info.add_points(points)
-        return f"恭喜你, 猜对了, 积分增加 {points} 点, 当前积分 {format(self.info.points, ',')}"
+        return f" 恭喜你, 猜对了, 积分增加 {points} 点, 当前积分 {format(self.info.points, ',')}"
 
     def is_show_win_tile_msg(self, msg: str) -> Optional[GuessesResult]:
         if msg != "查看和牌":
             return
         if self.info.points < self.SHOW_WIN_TILE_POINTS:
-            return {"msg": f"你的积分({self.info.points})不足", "img": None, "finish": False}
+            return {"msg": f" 你的积分({self.info.points})不足", "img": None, "finish": False}
 
         self.info.sub_points(self.SHOW_WIN_TILE_POINTS)
         blue = MahjongImage(TilebackType.blue)
@@ -210,7 +210,7 @@ class HandGuess:
         use_deduct_points = False
         if self.status.users[self.user].hit_count >= self.MAX_GUESS and not only_answer:
             if self.info.points < self.GUESS_DEDUCT_POINTS:
-                return {"msg": f"你的积分({self.info.points})不足", "img": None, "finish": True}
+                return {"msg": f" 你的积分({self.info.points})不足", "img": None, "finish": True}
             else:
                 use_deduct_points = True
                 self.info.sub_points(self.GUESS_DEDUCT_POINTS)
@@ -220,7 +220,7 @@ class HandGuess:
 
         msg_tiles = TC.one_line_string_to_136_array(msg_hand)
         if len(msg_tiles) != 14:
-            return {"msg": "不是, 说好的14张牌呢", "img": None, "finish": False}
+            return {"msg": " 不是, 说好的14张牌呢", "img": None, "finish": False}
 
         win_tile = TC.one_line_string_to_136_array(msg_win_tile)[0]
         calculator = HandCalculator()
@@ -232,9 +232,9 @@ class HandGuess:
         )
 
         if result.han is None:
-            return {"msg": "你这牌都没胡啊", "img": None, "finish": False}
+            return {"msg": " 你这牌都没胡啊", "img": None, "finish": False}
         if result.han == 0:
-            return {"msg": "你无役了", "img": None, "finish": False}
+            return {"msg": " 你无役了", "img": None, "finish": False}
 
         current_tiles = HandGuess.format_split_hand(msg_hand[:-2])
 
