@@ -55,7 +55,8 @@ class HandResult(NamedTuple):
 def get_hand(hand_index=None, **kwargs) -> HandResult:
     calculator = HandCalculator()
 
-    hand_list = linecache.getlines(__dir.joinpath("assets", "hands.txt").as_posix())  # 读取手牌列表
+    hand_list = linecache.getlines(__dir.joinpath(
+        "assets", "hands.txt").as_posix())  # 读取手牌列表
     hand_index = hand_index or random.randint(0, len(hand_list))  # 指定或者随机一组手牌
     hand_raw = hand_list[hand_index].strip()[:-3]
     raw = hand_raw.replace("+", "")
@@ -97,11 +98,11 @@ class GuessesResult(TypedDict):
 class HandGuess:
     __slots__ = ["user", "session", "info", "_status"]
 
-    MAX_GUESS = 15  # 每人最大猜测次数
-    GUESS_DEDUCT_POINTS = 0  # 超出每回扣除的积分
-    SHOW_WIN_TILE_POINTS = 0  # 查看胡牌扣除积分
+    MAX_GUESS = 8  # 每人最大猜测次数
+    GUESS_DEDUCT_POINTS = 200  # 超出每回扣除的积分
+    SHOW_WIN_TILE_POINTS = 200  # 查看胡牌扣除积分
 
-    TIMEOUT = 5 * 60  # 一局结束超时时间
+    TIMEOUT = 10 * 60  # 一局结束超时时间
 
     _record = set()
 
@@ -133,7 +134,8 @@ class HandGuess:
         # 生成手牌
         hand_res = get_hand()
         self._record.add(self.session)
-        self._status = GroupState(True, hand_res, defaultdict(lambda: UserState(0)))
+        self._status = GroupState(
+            True, hand_res, defaultdict(lambda: UserState(0)))
         logger.debug(TC.to_one_line_string(hand_res.tiles) + hand_res.win_tile)
 
         return
@@ -168,7 +170,7 @@ class HandGuess:
             if i == "z" or i == "h":
                 result += "z".join(hand[split_start:index]) + "z"
                 split_start = index + 1
-        return [result[i * 2 : i * 2 + 2] for i in range(int(len(result) / 2))]
+        return [result[i * 2: i * 2 + 2] for i in range(int(len(result) / 2))]
 
     def inc_user_count(self):
         info = self.status.users[self.user]
@@ -182,13 +184,13 @@ class HandGuess:
     def win_game(self, points: int):
         self.reset_game()
         self.info.add_points(points)
-        return f"恭喜你, 猜对了, 积分增加 {points} 点, 当前积分 {format(self.info.points, ',')}"
+        return f" 恭喜你, 猜对了, 积分增加 {points} 点, 当前积分 {format(self.info.points, ',')}"
 
     def is_show_win_tile_msg(self, msg: str) -> Optional[GuessesResult]:
         if msg != "查看和牌":
             return
         if self.info.points < self.SHOW_WIN_TILE_POINTS:
-            return {"msg": f"你的积分({self.info.points})不足", "img": None, "finish": False}
+            return {"msg": f" 你的积分({self.info.points})不足", "img": None, "finish": False}
 
         self.info.sub_points(self.SHOW_WIN_TILE_POINTS)
         blue = MahjongImage(TilebackType.blue)
@@ -208,7 +210,7 @@ class HandGuess:
         use_deduct_points = False
         if self.status.users[self.user].hit_count >= self.MAX_GUESS and not only_answer:
             if self.info.points < self.GUESS_DEDUCT_POINTS:
-                return {"msg": f"你的积分({self.info.points})不足", "img": None, "finish": True}
+                return {"msg": f" 你的积分({self.info.points})不足", "img": None, "finish": True}
             else:
                 use_deduct_points = True
                 self.info.sub_points(self.GUESS_DEDUCT_POINTS)
@@ -218,7 +220,7 @@ class HandGuess:
 
         msg_tiles = TC.one_line_string_to_136_array(msg_hand)
         if len(msg_tiles) != 14:
-            return {"msg": "不是, 说好的14张牌呢", "img": None, "finish": False}
+            return {"msg": " 不是, 说好的14张牌呢", "img": None, "finish": False}
 
         win_tile = TC.one_line_string_to_136_array(msg_win_tile)[0]
         calculator = HandCalculator()
@@ -230,9 +232,9 @@ class HandGuess:
         )
 
         if result.han is None:
-            return {"msg": "你这牌都没胡啊", "img": None, "finish": False}
+            return {"msg": " 你这牌都没胡啊", "img": None, "finish": False}
         if result.han == 0:
-            return {"msg": "你无役了", "img": None, "finish": False}
+            return {"msg": " 你无役了", "img": None, "finish": False}
 
         current_tiles = HandGuess.format_split_hand(msg_hand[:-2])
 
@@ -242,7 +244,8 @@ class HandGuess:
 
         # 手牌
         hand_img = Image.new("RGB", (80 * 13, 130), "#6c6c6c")
-        group_tiles_box = self.status.hand.tiles_ascii + [self.status.hand.win_tile]
+        group_tiles_box = self.status.hand.tiles_ascii + \
+            [self.status.hand.win_tile]
 
         for index, tile in enumerate(current_tiles):
             ascii_tile = self.status.hand.tiles_ascii[index]
@@ -280,7 +283,8 @@ class HandGuess:
         # 番提示
         status_han = self.status.hand.result.han
         status_fu = self.status.hand.result.fu
-        status_cost = self.status.hand.result.cost["main"] + self.status.hand.result.cost["additional"]
+        status_cost = self.status.hand.result.cost["main"] + \
+            self.status.hand.result.cost["additional"]
         tsumo_tip = ("", ",自摸")[self.status.hand.tsumo]
         han_tip = f"{status_han}番{status_fu}符 {status_cost}点 (包括立直{tsumo_tip})"
 
@@ -297,8 +301,10 @@ class HandGuess:
                     255,
                 )
             else:
-                last = self.MAX_GUESS - self.status.users[self.user].hit_count - 1
-                draw_text_by_line(background, (26.5, 25), f"剩余{last}回", get_font(40), "#475463", 255)
+                last = self.MAX_GUESS - \
+                    self.status.users[self.user].hit_count - 1
+                draw_text_by_line(background, (26.5, 25),
+                                  f"剩余{last}回", get_font(40), "#475463", 255)
 
             draw_text_by_line(
                 background,
@@ -309,7 +315,8 @@ class HandGuess:
                 800,
             )
 
-        draw_text_by_line(background, (403.5, 25), tip, get_font(40), "#475463", 800, True)
+        draw_text_by_line(background, (403.5, 25), tip,
+                          get_font(40), "#475463", 800, True)
         draw_text_by_line(
             background,
             (194.5, 130),

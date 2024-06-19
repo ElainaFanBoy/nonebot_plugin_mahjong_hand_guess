@@ -1,3 +1,5 @@
+from nonebot_plugin_alconna import UniMsg, Command, MsgTarget, UniMessage
+from nonebot_plugin_waiter import waiter
 from pathlib import Path
 
 from nonebot.adapters import Event
@@ -24,7 +26,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
-        "version": "0.1.1",
+        "version": "0.2.0",
     },
 )
 
