@@ -8,9 +8,13 @@ from nonebot.plugin import PluginMetadata, require, inherit_supported_adapters
 from .handler import HandGuess
 from .imghandler import image_save
 
+require("nonebot_plugin_session")
 require("nonebot_plugin_alconna")
 require("nonebot_plugin_waiter")
 
+from nonebot_plugin_waiter import waiter
+from nonebot_plugin_alconna import UniMsg, Command, UniMessage, MsgTarget
+from nonebot_plugin_session import EventSession, SessionIdType
 
 __plugin_meta__ = PluginMetadata(
     name="日麻猜手牌小游戏",
@@ -18,7 +22,7 @@ __plugin_meta__ = PluginMetadata(
     usage="根据提示猜出手牌",
     type="application",
     homepage="https://github.com/ElainaFanBoy/nonebot_plugin_majhong_hand_guess",
-    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna"),
+    supported_adapters=inherit_supported_adapters("nonebot_plugin_alconna", "nonebot_plugin_session"),
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
@@ -38,11 +42,11 @@ __dir = Path(__file__).parent
 
 
 @sv.handle()
-async def main(event: Event, target: MsgTarget):
+async def main(event: Event, target: MsgTarget, session: EventSession):
     if target.private:
         await sv.finish("请在群聊中使用")
-
-    hg = HandGuess(event.get_user_id(), target.id)
+    session_id = session.get_id(SessionIdType.GROUP)
+    hg = HandGuess(event.get_user_id(), session_id)
     if hg.already_start():
         await sv.finish("游戏已经开始了, 请不要重复开始")
     hg.start()
@@ -52,7 +56,9 @@ async def main(event: Event, target: MsgTarget):
     await sv.send(UniMessage.image(path=rule_path))
 
     @waiter(waits=["message"], block=False)
-    async def listen(msg: UniMsg):
+    async def listen(msg: UniMsg, _session: EventSession):
+        if _session.get_id(SessionIdType.GROUP) != session_id:
+            return
         text = msg.extract_plain_text()
         if text == "取消":
             return False

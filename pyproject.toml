@@ -17,6 +17,7 @@ python = "^3.9"
 nonebot2 = "^2.0.0"
 nonebot-plugin-alconna = "^0.47.1"
 nonebot-plugin-localstore = "^0.6.0"
+nonebot-plugin-session = "^0.3.1"
 Pillow = "^9.5.0"
 ujson = "^5.7.0"
 mahjong = "^1.2.1"
@@ -97,6 +98,7 @@ dependencies = [
     "sqlitedict<3.0.0,>=2.1.0",
     "nonebot-plugin-alconna>=0.47.0",
     "nonebot-plugin-localstore>=0.6.0",
+    "nonebot-plugin-session>=0.3.1",
 ]
 requires-python = "<4.0,>=3.9"
 readme = "README.md"
