@@ -12,7 +12,7 @@ _🀄️ 日麻猜手牌小游戏（适用于 Onebot V11）🀄️_
 
 <img src="https://img.shields.io/github/license/ElainaFanBoy/nonebot_plugin_mahjong_hand_guess.svg" alt="license">
 <img src="https://img.shields.io/badge/nonebot-2.0.0+-red.svg" alt="NoneBot">
-<img src="https://img.shields.io/badge/python-3.10+-blue.svg" alt="python">
+<img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="python">
 
 </div>
 
