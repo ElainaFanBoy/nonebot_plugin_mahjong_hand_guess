@@ -295,7 +295,7 @@ class HandGuess:
                 draw_text_by_line(
                     background,
                     (26.5, 25),
-                    f"-1000 ({format(self.info.points, ',')})",
+                    f"-200 ({format(self.info.points, ',')})",
                     get_font(30),
                     "#475463",
                     255,
