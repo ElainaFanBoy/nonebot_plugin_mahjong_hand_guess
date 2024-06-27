@@ -5,6 +5,7 @@ from typing import Optional, TYPE_CHECKING
 
 
 from PIL import Image, ImageDraw, ImageFont
+from PIL.ImageFont import FreeTypeFont
 
 if TYPE_CHECKING:
     from PIL.Image import _Box
@@ -16,14 +17,15 @@ def get_font(size, w="85"):
     return ImageFont.truetype(__dir.joinpath("assets", "font", f"HYWenHei {w}W.ttf").as_posix(), size=size)
 
 
-def draw_text_by_line(img, pos, text, font, fill, max_length, center=False, line_space=None):
+def draw_text_by_line(img, pos, text, font: FreeTypeFont, fill, max_length, center=False, line_space=None):
     """
     在图片上写长段文字, 自动换行
     max_length单行最大长度, 单位像素
     line_space  行间距, 单位像素, 默认是字体高度的0.3倍
     """
     x, y = pos
-    _, h = font.getsize("X")
+    _, h1, _, h2 = font.getbbox("X")
+    h = h1 - h2
     if line_space is None:
         y_add = math.ceil(1.3 * h)
     else:
@@ -32,23 +34,23 @@ def draw_text_by_line(img, pos, text, font, fill, max_length, center=False, line
     row = ""  # 存储本行文字
     length = 0  # 记录本行长度
     for character in text:
-        w, h = font.getsize(character)  # 获取当前字符的宽度
+        w = font.getlength(character)  # 获取当前字符的宽度
         if length + w * 2 <= max_length:
             row += character
             length += w
         else:
             row += character
             if center:
-                font_size = font.getsize(row)
-                x = math.ceil((img.size[0] - font_size[0]) / 2)
+                font_size = font.getlength(row)
+                x = math.ceil((img.size[0] - font_size) / 2)
             draw.text((x, y), row, font=font, fill=fill)
             row = ""
             length = 0
             y += y_add
     if row != "":
         if center:
-            font_size = font.getsize(row)
-            x = math.ceil((img.size[0] - font_size[0]) / 2)
+            font_size = font.getlength(row)
+            x = math.ceil((img.size[0] - font_size) / 2)
         draw.text((x, y), row, font=font, fill=fill)
 
 
