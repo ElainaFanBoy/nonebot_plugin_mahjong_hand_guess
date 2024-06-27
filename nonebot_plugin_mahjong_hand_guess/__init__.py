@@ -25,7 +25,7 @@ __plugin_meta__ = PluginMetadata(
     extra={
         "unique_name": "mahjong-hand-guess",
         "author": "Nanako <demo0929@vip.qq.com>",
-        "version": "0.4.1",
+        "version": "0.4.2",
     },
 )
 
