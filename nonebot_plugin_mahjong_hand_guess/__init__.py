@@ -52,7 +52,9 @@ async def main(event: Event, target: MsgTarget, session: EventSession):
     await sv.send(f"开始一轮猜手牌, 每个人有{hg.MAX_GUESS}次机会\n输入 “取消” 结束游戏")
 
     rule_path = __dir.joinpath("assets", "rule.png")
-    await sv.send(UniMessage.image(path=rule_path))
+    with open(rule_path, "rb") as f:
+        pic = f.read()
+    await sv.send(UniMessage.image(raw=pic))
 
     @waiter(waits=["message"], block=False)
     async def listen(msg: UniMsg, _session: EventSession):

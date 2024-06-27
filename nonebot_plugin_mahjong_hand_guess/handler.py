@@ -206,6 +206,8 @@ class HandGuess:
         # pass不合法的信息
         if re.search(rf"[^\dmpszh{''.join(TileMap)}]", msg):
             return
+        if len(msg) < 10:
+            return
 
         use_deduct_points = False
         if self.status.users[self.user].hit_count >= self.MAX_GUESS and not only_answer:
