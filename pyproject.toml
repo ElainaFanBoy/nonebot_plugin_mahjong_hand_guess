@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nonebot-plugin-mahjong-hand-guess"
-version = "0.4.2"
+version = "0.4.3"
 description = "日麻猜手牌小游戏（适用于Onebot V11）"
 authors = ["Nanako <demo0929@vip.qq.com>"]
 license = "MIT"
@@ -84,19 +84,19 @@ build-backend = "pdm.backend"
 
 [project]
 name = "nonebot-plugin-mahjong-hand-guess"
-version = "0.4.2"
+version = "0.4.3"
 description = "日麻猜手牌小游戏（适用于Onebot V11）"
 authors = [
     {name = "rf_tar_railt", email = "3165388245@qq.com"},
     {name = "Nanako", email = "demo0929@vip.qq.com"},
 ]
 dependencies = [
-    "nonebot2<3.0.0,>=2.0.0",
-    "Pillow<10.0.0,>=9.5.0",
-    "ujson<6.0.0,>=5.7.0",
-    "mahjong<2.0.0,>=1.2.1",
-    "sqlitedict<3.0.0,>=2.1.0",
-    "nonebot-plugin-alconna>=0.47.0",
+    "nonebot2>=2.0.0",
+    "Pillow>=9.5.0",
+    "ujson>=5.7.0",
+    "mahjong>=1.2.1",
+    "sqlitedict>=2.1.0",
+    "nonebot-plugin-alconna>=0.47.1",
     "nonebot-plugin-localstore>=0.6.0",
     "nonebot-plugin-session>=0.3.1",
 ]
