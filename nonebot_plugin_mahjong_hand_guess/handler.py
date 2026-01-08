@@ -244,37 +244,55 @@ class HandGuess:
         orange = MahjongImage(TilebackType.orange)
         no_color = MahjongImage(TilebackType.no_color)
 
+        # === 14张一起做 Wordle 判色（修复重复牌 + 第14张单独判定导致的误判） ===
+        answer_tiles_14 = self.status.hand.tiles_ascii + [self.status.hand.win_tile]
+        guess_tiles_14 = current_tiles + [msg_win_tile]
+
+        remain = defaultdict(int)
+        for t in answer_tiles_14:
+            remain[t] += 1
+
+        colors = [None] * 14  # "blue" | "orange" | "gray"
+
+        # 第一轮：位置完全正确 -> 蓝
+        for i in range(14):
+            if guess_tiles_14[i] == answer_tiles_14[i] and remain[guess_tiles_14[i]] > 0:
+                colors[i] = "blue"
+                remain[guess_tiles_14[i]] -= 1
+
+        # 第二轮：存在但位置不对 -> 黄，否则灰
+        for i in range(14):
+            if colors[i] is not None:
+                continue
+            t = guess_tiles_14[i]
+            if remain.get(t, 0) > 0:
+                colors[i] = "orange"
+                remain[t] -= 1
+            else:
+                colors[i] = "gray"
+        # === 判色结束 ===
+
         # 手牌
         hand_img = Image.new("RGB", (80 * 13, 130), "#6c6c6c")
-        group_tiles_box = self.status.hand.tiles_ascii + \
-            [self.status.hand.win_tile]
-
         for index, tile in enumerate(current_tiles):
-            ascii_tile = self.status.hand.tiles_ascii[index]
             pos = (index * 80, 0)
-            if tile == ascii_tile and tile in group_tiles_box:
-                # 如果位置正确
+            c = colors[index]
+            if c == "blue":
                 easy_paste(hand_img, blue.tile(tile), pos)
-            elif tile in group_tiles_box:
-                # 如果存在
+            elif c == "orange":
                 easy_paste(hand_img, orange.tile(tile), pos)
             else:
-                # 否则不存在
                 easy_paste(hand_img, no_color.tile(tile), pos)
 
-            if tile in group_tiles_box:
-                group_tiles_box.remove(tile)
-
-        # 胡牌
+        # 胡牌（第14张）
         wind_img = Image.new("RGB", (80, 130), "#6c6c6c")
         pos = (0, 0)
-        if msg_win_tile == self.status.hand.win_tile and msg_win_tile in group_tiles_box:
+        c = colors[13]
+        if c == "blue":
             easy_paste(wind_img, blue.tile(msg_win_tile), pos)
-        elif msg_win_tile in self.status.hand.tiles_ascii:
-            # 如果存在
+        elif c == "orange":
             easy_paste(wind_img, orange.tile(msg_win_tile), pos)
         else:
-            # 否则不存在
             easy_paste(wind_img, no_color.tile(msg_win_tile), pos)
 
         # 役提示
